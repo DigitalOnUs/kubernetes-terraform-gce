@@ -35,20 +35,44 @@ sleep 5
 terraform apply
 
 
-
-
-
 elif [[  $LOWEROPTION = "b" ]] ; then
 	echo "You choose Google Cloud Engine"
+echo "Please enter the path to your json key file i.e. /home/username/abcd1234.json"
+read cpath
+export GOOGLE_CREDENTIALS=$(cat $cpath)
 
+echo "Please enter the project id for you google project"
+read cproj
+export GOOGLE_PROJECT=$cproj
+
+echo "Please enter the region to deploy the VM i.e. us-central1"
+read creg
+export GOOGLE_REGION=$creg
+
+
+echo "We are creating the networking on GCE"
+cd prod/netw
+terraform get
+terraform plan 
+terraform apply
+
+echo "We are creating the VM on your selected region"
+cd ../gceinstance/
+terraform get
+terraform plan
+terraform apply
+
+ 
 else 
-	echo "You only can choose option A or B Please Try again"
-	read coption
-	while [[ $LOWEROPTION != "a" ||  $LOWEROPTION != "b" ]]; do
-                        echo "You only can choose option A or B Please Try again"
-                        read coption
-        done
-	export coption
+	echo "You choose a invalid option"
+#	read coption
+#        LOWEROPTION=$(echo "$coption" | tr '[:upper:]' '[:lower:]')
+#	while [[ $LOWEROPTION != "a" &&  $LOWEROPTION != "b" ]]; do
+#                        echo "You only can choose option A or B Please Try again"
+#                        read coption
+#			LOWEROPTION=$(echo "$coption" | tr '[:upper:]' '[:lower:]')
+#        done
+#	export coption
 
 fi
 
